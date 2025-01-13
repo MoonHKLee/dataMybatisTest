@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true" />
+        <setting name="jdbcTypeForNull" value="NULL" />
+    </settings>
+
+    <typeAliases>
+        <typeAlias alias="Address" type="moonhyuk.lee.mytest.Address" />
+        <typeAlias alias="User" type="moonhyuk.lee.mytest.User" />
+        <typeAlias alias="Order" type="moonhyuk.lee.mytest.Order" />
+        <typeAlias alias="OrderItem" type="moonhyuk.lee.mytest.OrderItem" />
+    </typeAliases>
+</configuration>
