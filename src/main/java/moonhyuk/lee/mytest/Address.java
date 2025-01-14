@@ -1,12 +1,8 @@
 package moonhyuk.lee.mytest;
 
-import lombok.Getter;
-import lombok.Setter;
 import moonhyuk.lee.resultmap.generator.Embeddable;
 import org.springframework.data.relational.core.mapping.Column;
 
-@Getter
-@Setter
 @Embeddable
 public class Address {
     @Column("STREET")

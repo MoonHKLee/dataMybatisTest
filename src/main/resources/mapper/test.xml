@@ -1,0 +1,78 @@
+<mapper namespace="net.ldcc.localpms.common.repository.user.UserProjectMapper">
+
+    <!-- searchUserListBySearchCondition -->
+    <select id="searchUserListBySearchCondition" resultType="GetUserManagementListResponse.InnerUserManagement">
+        SELECT
+        userProject.user_sequence AS seq,
+        userProject.user_id AS id,
+        userProject.user_name AS name,
+        userProject.user_employee_number AS employeeNumber,
+        userProject.user_mobile_number AS mobileNumber,
+        userProject.user_email AS email,
+        CASE
+        WHEN user.is_ldcc = TRUE THEN department.name
+        ELSE user.department
+        END AS department,
+        userProject.task AS task,
+        userProject.user_grade AS grade,
+        userProject.user_is_ldcc AS isLdcc,
+        userProject.is_use AS isUse,
+        userProject.user_approval_status AS approvalStatus,
+        DATE_FORMAT(userProject.user_start_date, '%Y-%m-%d') AS startDate,
+        defaultUser.account_start_dt AS accountStartDt,
+        DATE_FORMAT(userProject.user_account_confirm_datetime, '%Y-%m-%d %H:%i:%s') AS accountConfirmDateTime,
+        DATE_FORMAT(userProject.user_renewal_approve_datetime, '%Y-%m-%d %H:%i:%s') AS renewalApproveDateTime,
+        DATE_FORMAT(userProject.user_end_date, '%Y-%m-%d') AS endDate,
+        defaultUser.account_end_dt AS accountEndDt,
+        COALESCE(
+        CASE
+        WHEN companyRegistrationManagement.sequence IS NOT NULL THEN companyRegistrationManagement.name
+        ELSE user.company_name
+        END,
+        ''
+        ) AS companyName,
+        userProject.user_group_project_group_sequence AS userGroupSeq,
+        userProject.user_group_project_group_name AS userGroupName,
+        userProject.note AS note,
+        userProject.user_is_ip_check AS isIpCheck,
+        userProject.user_access_ip_addr AS accessIpAddr,
+        CASE
+        WHEN userProject.user_initial_password IS NOT NULL THEN '**********'
+        ELSE ''
+        END AS initialPassword,
+        DATE_FORMAT(userProject.user_last_login_datetime, '%Y-%m-%d %H:%i:%s') AS lastLoginDateTime,
+        -- Add dynamic fields here if needed
+        userProject.dynamic_field_dynamic_extra_field01 AS dynamicExtraField01,
+        userProject.dynamic_field_dynamic_extra_field02 AS dynamicExtraField02
+        FROM
+        user_project userProject
+        INNER JOIN user ON userProject.user_sequence = user.sequence
+        LEFT JOIN default_user defaultUser ON userProject.user_id = defaultUser.user_id
+        INNER JOIN project ON userProject.project_sequence = project.sequence
+        LEFT JOIN company_registration_management companyRegistrationManagement
+        ON user.company_sequence = companyRegistrationManagement.sequence
+        LEFT JOIN department ON user.department = department.id
+        WHERE
+        userProject.project_sequence = #{projectSeq}
+        <if test="keywordType != null and keyword != null">
+            AND (
+            <choose>
+                <when test="keywordType == 'userId'">
+                    user.user_id LIKE CONCAT('%', #{keyword}, '%')
+                </when>
+                <when test="keywordType == 'name'">
+                    user.name LIKE CONCAT('%', #{keyword}, '%')
+                </when>
+                <when test="keywordType == 'companyName'">
+                    user.company_name LIKE CONCAT('%', #{keyword}, '%')
+                </when>
+                <otherwise>
+                    (user.user_id LIKE CONCAT('%', #{keyword}, '%')
+                    OR user.name LIKE CONCAT('%', #{keyword}, '%')
+                    OR user.company_name LIKE CONCAT('%', #{keyword}, '%'))
+                </otherwise>
+            </choose>
+            )
+        </if>
+    </select>
+</mapper>

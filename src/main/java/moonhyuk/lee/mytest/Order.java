@@ -1,7 +1,5 @@
 package moonhyuk.lee.mytest;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.MappedCollection;
@@ -12,8 +10,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Table("ORDERS")
-@Getter
-@Setter
 public class Order {
     @Id
     @Column("ORDER_ID") // 별칭과 매핑

@@ -1,9 +1,9 @@
 package moonhyuk.lee.mytest;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
+import org.springframework.data.repository.CrudRepository;
 
 @Mapper
-public interface UserMapper {
-    User findUserWithOrders(@Param("id") Long id);
+public interface UserMapper extends CrudRepository<User, Long> {
+    User findUserWithOrders(Long id);
 }
